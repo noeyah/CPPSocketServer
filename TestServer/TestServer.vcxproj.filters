@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TestServer">
+      <UniqueIdentifier>{0250e950-1c36-4707-a3eb-6d87752f67b8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>TestServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestServer.cpp">
+      <Filter>TestServer</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketHelper.cpp">
+      <Filter>TestServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>TestServer</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHelper.h">
+      <Filter>TestServer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Network">
+      <UniqueIdentifier>{b07491cc-cf68-42d2-b753-d6e7aa4d957a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{db4f5a07-e728-4375-b39e-13ffa06277ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{70d205fd-af21-432b-b9a0-5fa979f1bffc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NetworkService.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="IocpEvent.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkPch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerNetworkService.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientNetworkService.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Connector.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketUtils.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvBuffer.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NetworkService.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkPch.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerNetworkService.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientNetworkService.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="IocpEvent.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Connector.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketUtils.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvBuffer.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
