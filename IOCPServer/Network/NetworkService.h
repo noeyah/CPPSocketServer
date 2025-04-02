@@ -9,7 +9,7 @@ public:
 
 	virtual void OnConnect(SessionID sessionID) = 0;
 	virtual void OnDisconnect(SessionID sessionID) = 0;
-	virtual void OnRecv(SessionID sessionID, byte* buffer, int32 length) = 0;
+	virtual void OnRecv(SessionID sessionID, std::span<const byte> packetData) = 0;
 	virtual void OnSendComplete(SessionID sessionID, int32 len) = 0;
 };
 

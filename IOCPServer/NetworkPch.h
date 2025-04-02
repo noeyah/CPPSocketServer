@@ -14,6 +14,7 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
+#include <span>
 
 #include <thread>
 #include <mutex>

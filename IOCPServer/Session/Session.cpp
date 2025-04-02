@@ -156,7 +156,10 @@ void Session::ParseRecvData()
 		if (dataSize < packetSize)
 			break;
 
-		GetService()->GetEventHandler()->OnRecv(_sessionID, readBuffer, packetSize);
+		const byte* packetStartPtr = readBuffer;
+		std::span<const byte> packetSpan(packetStartPtr, packetSize);
+
+		GetService()->GetEventHandler()->OnRecv(_sessionID, packetSpan);
 		_recvBuffer.MoveReadPos(packetSize);
 	}
 }

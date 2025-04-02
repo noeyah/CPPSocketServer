@@ -33,23 +33,23 @@ public:
 	{
 
 	}
-	virtual void OnRecv(SessionID sessionID, byte* buffer, int32 length) override
+	virtual void OnRecv(SessionID sessionID, std::span<const byte> packetData) override
 	{
 		std::this_thread::sleep_for(100ms);
 
 		std::string msg;
-		if (PacketHelper::UnpackStringPacket(buffer, length, msg))
+		if (PacketHelper::UnpackStringPacket(packetData, msg))
 		{
 			std::cout << "Server ▶ " << msg << std::endl;
 		}
 		else
 		{
-			std::cout << "recv unpack failed. sessionID : " << sessionID << ", len : " << length << std::endl;
+			std::cout << "recv unpack failed. sessionID : " << sessionID << ", size : " << packetData.size() << std::endl;
 			return;
 		}
 
 		// 받은걸 그대로 전송
-		_server->Send(sessionID, buffer, length);
+		_server->Send(sessionID, packetData.data(), packetData.size());
 	}
 	virtual void OnSendComplete(SessionID sessionID, int32 len) override
 	{

@@ -161,6 +161,19 @@ void NetworkService::Stop()
 
 	LOG_INFO("Stopping NetworkService...");
 
+	std::vector<std::shared_ptr<Session>> targetSession;
+	{
+		std::lock_guard<std::mutex> lock(_sessionLock);
+		targetSession.reserve(_sessions.size());
+		for (const auto& pair : _sessions)
+			targetSession.push_back(pair.second);
+	}
+
+	for (auto& session : targetSession)
+	{
+		session->Disconnect();
+	}
+
 	if (_iocpHandle)
 	{
 		for (int32 i = 0; i < _workerThreads.size(); i++)
@@ -175,7 +188,9 @@ void NetworkService::Stop()
 			t.join();
 	}
 
+
 	_workerThreads.clear();
+	_sessions.clear();
 
 	if (_iocpHandle)
 	{
@@ -228,6 +243,10 @@ void NetworkService::RunIocpQueue()
 			switch (errorCode)
 			{
 			case ERROR_OPERATION_ABORTED:
+			{
+				LOG_INFO("pending operation aborted. errorCode : " << errorCode);
+			}
+			break;
 			case ERROR_NETNAME_DELETED:
 			case WSAECONNRESET:
 			{
@@ -236,12 +255,12 @@ void NetworkService::RunIocpQueue()
 					|| iocpEvent->Operation == EventOperation::Disconnect)
 				{
 					auto sessionEvent = static_cast<SessionEvent*>(iocpEvent);
-					LOG_WARN("client force quit ? " << errorCode << ", sessionID : " << sessionEvent->SessionPtr->GetSessionID());
+					LOG_WARN("client disconnected abruptly. errorCode : " << errorCode << ", sessionID : " << sessionEvent->SessionPtr->GetSessionID());
 					sessionEvent->SessionPtr->Disconnect();
 				}
 				else
 				{
-					LOG_WARN("client force quit ? " << errorCode);
+					LOG_WARN("client disconnected abruptly. errorCode : " << errorCode);
 				}
 			}
 			break;
@@ -259,8 +278,8 @@ void NetworkService::RunIocpQueue()
 			break;
 		}
 
-		if (!_isRunning)
-			break;
+		/*if (!_isRunning)
+			break;*/
 
 		switch (iocpEvent->Operation)
 		{
