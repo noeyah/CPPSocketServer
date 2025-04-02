@@ -15,12 +15,18 @@
     <ClCompile Include="PacketHelper.cpp">
       <Filter>TestServer</Filter>
     </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>TestServer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>TestServer</Filter>
     </ClInclude>
     <ClInclude Include="PacketHelper.h">
+      <Filter>TestServer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameServer.h">
       <Filter>TestServer</Filter>
     </ClInclude>
   </ItemGroup>

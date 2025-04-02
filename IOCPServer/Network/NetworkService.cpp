@@ -156,7 +156,7 @@ void NetworkService::Init()
 
 void NetworkService::Stop()
 {
-	if (_isRunning.exchange(false))
+	if (!_isRunning.exchange(false))
 		return;
 
 	LOG_INFO("Stopping NetworkService...");
@@ -250,9 +250,10 @@ void NetworkService::RunIocpQueue()
 			case ERROR_NETNAME_DELETED:
 			case WSAECONNRESET:
 			{
-				if (iocpEvent->Operation == EventOperation::Recv 
+				if (iocpEvent != nullptr &&
+					(iocpEvent->Operation == EventOperation::Recv 
 					|| iocpEvent->Operation == EventOperation::Send 
-					|| iocpEvent->Operation == EventOperation::Disconnect)
+					|| iocpEvent->Operation == EventOperation::Disconnect))
 				{
 					auto sessionEvent = static_cast<SessionEvent*>(iocpEvent);
 					LOG_WARN("client disconnected abruptly. errorCode : " << errorCode << ", sessionID : " << sessionEvent->SessionPtr->GetSessionID());
@@ -278,8 +279,11 @@ void NetworkService::RunIocpQueue()
 			break;
 		}
 
-		/*if (!_isRunning)
-			break;*/
+		if (iocpEvent == nullptr)
+		{
+			LOG_ERROR("iocpEvent is null");
+			continue;
+		}
 
 		switch (iocpEvent->Operation)
 		{

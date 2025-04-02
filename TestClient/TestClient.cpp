@@ -7,8 +7,6 @@
 #include <chrono>
 using namespace std::chrono;
 
-std::vector<SessionID> sessions;
-
 class EventHandlerEx : public INetworkEventHandler
 {
 public:
@@ -22,7 +20,6 @@ public:
 	virtual void OnConnect(SessionID sessionID) override
 	{
 		std::cout << "Connect " << sessionID << std::endl;
-		sessions.push_back(sessionID);
 
 		std::string str = "hello";
 		auto data = PacketHelper::MakeStringPacket(str);
@@ -51,10 +48,6 @@ public:
 		// 받은걸 그대로 전송
 		_server->Send(sessionID, packetData.data(), packetData.size());
 	}
-	virtual void OnSendComplete(SessionID sessionID, int32 len) override
-	{
-
-	}
 };
 
 int main()
@@ -68,9 +61,11 @@ int main()
 
 	std::cout << "Test Client" << std::endl;
 
-	EventHandlerEx* eventHandler = new EventHandlerEx();
-	std::shared_ptr<ClientNetworkService> server = std::make_shared<ClientNetworkService>("127.0.0.1", 7777, eventHandler, 10);
-	eventHandler->SetService(server);
+	
+
+	EventHandlerEx eventHandler;
+	std::shared_ptr<ClientNetworkService> server = std::make_shared<ClientNetworkService>("127.0.0.1", 7777, &eventHandler, 10);
+	eventHandler.SetService(server);
 	server->Start(4);
 
 	while (true)
@@ -83,5 +78,4 @@ int main()
 
 	server->Stop();
 	WSACleanup();
-	delete eventHandler;
 }
