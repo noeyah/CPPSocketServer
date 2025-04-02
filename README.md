@@ -36,7 +36,7 @@ C++을 사용하여 제작한 **IOCP 라이브러리**로, 포트폴리오용으
 
 #### 3. 이벤트 핸들러 구현   
 네트워크 이벤트(연결, 끊김, 수신 등)를 처리하기 위한 핸들러 클래스를 구현해야 합니다.   
-a. `INetworkEventHandler` 인터페이스 상속   
+**3-1. `INetworkEventHandler` 인터페이스 상속**   
 사용자 코드에서 `INetworkEventHandler` 인터페이스를 상속받는 클래스를 정의합니다.   
 ```cpp
 #include "Network/NetworkService.h"
@@ -67,9 +67,9 @@ class MyEventHandler : public INetworkEventHandler
 }
 ```
 
-b. 핸들러 객체 생성 및 관리   
-	+ 위에서 정의한 클래스의 인스턴스를 생성합니다.   
-	+ 주의 : 생성된 이벤트 핸들러 객체는 이후 생성될 NetworkService 객체보다 반드시 오래 유지되어야 합니다. NetworkService는 내부적으로 이 핸들러 객체의 포인터를 저장하고 사용하므로, **서비스가 동작하는 동안 핸들러 객체가 파괴되면 안 됩니다.**
+**3-2. 핸들러 객체 생성 및 관리**   
+- 위에서 정의한 클래스의 인스턴스를 생성합니다.   
+- 주의 : 생성된 이벤트 핸들러 객체는 이후 생성될 NetworkService 객체보다 반드시 오래 유지되어야 합니다. NetworkService는 내부적으로 이 핸들러 객체의 포인터를 저장하고 사용하므로, **서비스가 동작하는 동안 핸들러 객체가 파괴되면 안 됩니다.**
 
 #### 4. 초기화   
 네트워크 기능을 사용하기 전에 Winsock을 초기화합니다.   
