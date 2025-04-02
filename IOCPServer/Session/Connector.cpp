@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Connector.h"
-#include "NetworkService.h"
-#include "IocpEvent.h"
+#include "Network/NetworkService.h"
+#include "Network/IocpEvent.h"
 #include "Session.h"
+#include "SocketUtils.h"
 
 Connector::Connector(std::weak_ptr<NetworkService> service) : _service(service)
 {

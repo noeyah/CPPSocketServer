@@ -1,5 +1,5 @@
 #pragma once
-#include "IocpEvent.h"
+#include "Network/IocpEvent.h"
 #include "RecvBuffer.h"
 
 class NetworkService;
@@ -20,6 +20,8 @@ public:
 
 	void Disconnect();
 	void Send(std::shared_ptr<std::vector<byte>> sendBuffer);
+
+	SessionID GetSessionID() const { return _sessionID; }
 
 private:
 	void PostRecv();

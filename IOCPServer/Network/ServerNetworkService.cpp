@@ -2,8 +2,8 @@
 #include "ServerNetworkService.h"
 #include "NetworkService.h"
 #include "IocpEvent.h"
-#include "Listener.h"
-#include "Session.h"
+#include "Session/Listener.h"
+#include "Session/Session.h"
 
 ServerNetworkService::ServerNetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, int32 pendingAcceptCount)
 	: NetworkService(ip, port, eventHandler), _pendingAcceptCount(pendingAcceptCount)

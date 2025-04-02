@@ -14,6 +14,7 @@ using uint64	= unsigned __int64;		// ulong
 using SessionID = uint32;
 
 #define LOG_INFO(msg) std::cout << "[INFO] " << msg << std::endl;
+#define LOG_WARN(msg) std::cout << "[WARN] " << msg << std::endl;
 #define LOG_ERROR(msg) std::cout << "[ERROR] " << msg << std::endl;
 
 // winsock에서 주소 저장 공간을 구조체 크기 + 16바이트 해야함.

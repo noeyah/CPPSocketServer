@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Session.h"
-#include "NetworkService.h"
-#include "IocpEvent.h"
+#include "Network/NetworkService.h"
+#include "Network/IocpEvent.h"
 #include "RecvBuffer.h"
+#include "SocketUtils.h"
 
 Session::Session(SessionID sessionID, SOCKET socket, std::weak_ptr<NetworkService> service)
 	: _sessionID(sessionID), _socket(socket), _service(service)
@@ -15,12 +16,6 @@ Session::~Session()
 
 void Session::IOEvent(SessionEvent* iocpEvent, int32 bytesTransferred)
 {
-	/*if (_connected == false )
-	{
-		LOG_ERROR("IOEvent called on already disconnected session : " << _sessionID << ", operation : " << static_cast<int32>(iocpEvent->Operation));
-		return;
-	}*/
-
 	switch (iocpEvent->Operation)
 	{
 	case EventOperation::Disconnect:
@@ -55,8 +50,6 @@ void Session::Disconnect()
 {
 	_connected.store(false);
 
-	LOG_INFO("reserve disconnect : " << _sessionID);
-
 	{
 		std::lock_guard<std::mutex> lock(_shutdownLock);
 		if (_pendingSend)
@@ -65,7 +58,6 @@ void Session::Disconnect()
 		_postDisconnected.store(true);
 	}
 
-	LOG_INFO("Disconnect : " << _sessionID);
 	PostDisconnect();
 }
 

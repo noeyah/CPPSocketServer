@@ -12,7 +12,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetworkService.h">
+    <ClInclude Include="Network\NetworkService.h">
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
@@ -21,66 +21,66 @@
     <ClInclude Include="NetworkDefine.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Session.h">
+    <ClInclude Include="Session\Session.h">
       <Filter>Session</Filter>
     </ClInclude>
-    <ClInclude Include="IocpEvent.h">
+    <ClInclude Include="Network\IocpEvent.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="Listener.h">
+    <ClInclude Include="Session\Listener.h">
       <Filter>Session</Filter>
     </ClInclude>
     <ClInclude Include="NetworkPch.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="ServerNetworkService.h">
+    <ClInclude Include="Network\ServerNetworkService.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="ClientNetworkService.h">
+    <ClInclude Include="Network\ClientNetworkService.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="Connector.h">
+    <ClInclude Include="Session\Connector.h">
       <Filter>Session</Filter>
     </ClInclude>
-    <ClInclude Include="SocketUtils.h">
+    <ClInclude Include="Session\SocketUtils.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="RecvBuffer.h">
+    <ClInclude Include="Session\RecvBuffer.h">
       <Filter>Session</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NetworkService.cpp">
+    <ClCompile Include="Network\NetworkService.cpp">
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Session.cpp">
+    <ClCompile Include="Session\Session.cpp">
       <Filter>Session</Filter>
     </ClCompile>
-    <ClCompile Include="Listener.cpp">
+    <ClCompile Include="Session\Listener.cpp">
       <Filter>Session</Filter>
     </ClCompile>
     <ClCompile Include="NetworkPch.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="ServerNetworkService.cpp">
+    <ClCompile Include="Network\ServerNetworkService.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="ClientNetworkService.cpp">
+    <ClCompile Include="Network\ClientNetworkService.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="IocpEvent.cpp">
+    <ClCompile Include="Network\IocpEvent.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="Connector.cpp">
+    <ClCompile Include="Session\Connector.cpp">
       <Filter>Session</Filter>
     </ClCompile>
-    <ClCompile Include="SocketUtils.cpp">
+    <ClCompile Include="Session\SocketUtils.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="RecvBuffer.cpp">
+    <ClCompile Include="Session\RecvBuffer.cpp">
       <Filter>Session</Filter>
     </ClCompile>
   </ItemGroup>

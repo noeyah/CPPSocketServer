@@ -2,8 +2,8 @@
 #include "ClientNetworkService.h"
 #include "NetworkService.h"
 #include "IocpEvent.h"
-#include "Connector.h"
-#include "Session.h"
+#include "Session/Connector.h"
+#include "Session/Session.h"
 
 ClientNetworkService::ClientNetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, int32 connectCount)
 	: NetworkService(ip, port, eventHandler), _connectCount(connectCount)

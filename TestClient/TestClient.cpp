@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include "NetworkPch.h"
-#include "ClientNetworkService.h"
+#include "Network/ClientNetworkService.h"
 #include "PacketHelper.h"
 #include <thread>
 #include <chrono>
@@ -35,7 +35,7 @@ public:
 	}
 	virtual void OnRecv(SessionID sessionID, byte* buffer, int32 length) override
 	{
-		std::this_thread::sleep_for(1s);
+		std::this_thread::sleep_for(100ms);
 
 		std::string msg;
 		if (PacketHelper::UnpackStringPacket(buffer, length, msg))

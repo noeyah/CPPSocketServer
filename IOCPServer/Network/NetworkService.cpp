@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "NetworkService.h"
 #include "IocpEvent.h"
-#include "Listener.h"
-#include "Connector.h"
-#include "Session.h"
+#include "Session/Listener.h"
+#include "Session/Connector.h"
+#include "Session/Session.h"
+#include "Session/SocketUtils.h"
 
 NetworkService::NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler) 
 	: _eventHandler(eventHandler)
@@ -223,7 +224,32 @@ void NetworkService::RunIocpQueue()
 
 		if (!ret)
 		{
-			LOG_ERROR("GetQueuedCompletionStatus : " << WSAGetLastError());
+			auto errorCode = WSAGetLastError();
+			switch (errorCode)
+			{
+			case ERROR_OPERATION_ABORTED:
+			case ERROR_NETNAME_DELETED:
+			case WSAECONNRESET:
+			{
+				if (iocpEvent->Operation == EventOperation::Recv 
+					|| iocpEvent->Operation == EventOperation::Send 
+					|| iocpEvent->Operation == EventOperation::Disconnect)
+				{
+					auto sessionEvent = static_cast<SessionEvent*>(iocpEvent);
+					LOG_WARN("client force quit ? " << errorCode << ", sessionID : " << sessionEvent->SessionPtr->GetSessionID());
+					sessionEvent->SessionPtr->Disconnect();
+				}
+				else
+				{
+					LOG_WARN("client force quit ? " << errorCode);
+				}
+			}
+			break;
+			default:
+				LOG_ERROR("GetQueuedCompletionStatus : " << errorCode);
+				break;
+			} // switch end
+
 			continue;
 		}
 

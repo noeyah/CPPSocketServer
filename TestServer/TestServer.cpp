@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include "NetworkPch.h"
-#include "ServerNetworkService.h"
+#include "Network/ServerNetworkService.h"
 #include "PacketHelper.h"
 
 class EventHandlerEx : public INetworkEventHandler
