@@ -290,12 +290,22 @@ void NetworkService::RunIocpQueue()
 		case EventOperation::Accept:
 			{
 				auto acceptEvent = static_cast<AcceptEvent*>(iocpEvent);
+				if (acceptEvent->ListenerPtr == nullptr)
+				{
+					LOG_ERROR("AcceptEvent->ListenerPtr is null");
+					break;
+				}
 				acceptEvent->ListenerPtr->IOEvent(acceptEvent, bytesTransferd);
 			}
 			break;
 		case EventOperation::Connect:
 			{
 				auto connectEvent = static_cast<ConnectEvent*>(iocpEvent);
+				if (connectEvent->ConnectorPtr == nullptr)
+				{
+					LOG_ERROR("ConnectEvent->ConnectorPtr is null");
+					break;
+				}
 				connectEvent->ConnectorPtr->IOEvent(connectEvent, bytesTransferd);
 			}
 			break;
@@ -304,6 +314,11 @@ void NetworkService::RunIocpQueue()
 		case EventOperation::Send:
 			{
 				auto sessionEvent = static_cast<SessionEvent*>(iocpEvent);
+				if (sessionEvent->SessionPtr == nullptr)
+				{
+					LOG_ERROR("SessionEvent->SessionPtr is null");
+					break;
+				}
 				sessionEvent->SessionPtr->IOEvent(sessionEvent, bytesTransferd);
 			}
 			break;

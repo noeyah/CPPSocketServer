@@ -97,7 +97,6 @@ void Listener::PostAccept(AcceptEvent* iocpEvent)
 	if (newClient == INVALID_SOCKET)
 	{
 		LOG_ERROR("create socket failed : " << WSAGetLastError());
-		PostAccept(iocpEvent);
 		return;
 	}
 
@@ -147,7 +146,6 @@ void Listener::ProcessAccept(AcceptEvent* iocpEvent)
 	{
 		LOG_ERROR("SO_UPDATE_ACCEPT_CONTEXT failed : " << WSAGetLastError());
 		SocketUtils::CloseSocket(newClinet);
-		PostAccept(iocpEvent);
 		return;
 	}
 
@@ -155,7 +153,6 @@ void Listener::ProcessAccept(AcceptEvent* iocpEvent)
 	{
 		LOG_ERROR("register iocp failed : " << WSAGetLastError());
 		SocketUtils::CloseSocket(newClinet);
-		PostAccept(iocpEvent);
 		return;
 	}
 
