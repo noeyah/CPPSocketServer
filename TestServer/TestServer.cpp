@@ -17,7 +17,7 @@ int main()
     std::cout << "Test Server" << std::endl;
 
 	auto server = std::make_shared<GameServer>();
-	server->Start("127.0.0.1", 7777, 10);
+	server->Start("127.0.0.1", 7777, 100);
 	
 	while (true)
 	{

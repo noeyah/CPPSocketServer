@@ -19,7 +19,6 @@ public:
 	NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler);
 	NetworkService(SOCKADDR_IN address, INetworkEventHandler* eventHandler);
 	virtual ~NetworkService();
-	void Init();
 
 	virtual bool Start(uint32 workerThreadCount = 0) = 0;
 	virtual void Stop();
@@ -46,6 +45,8 @@ public:
 	LPFN_DISCONNECTEX GetDisConnectEx() const { return _disconnectEx; }
 
 protected:
+	void Init();
+
 	// worker thread
 	void StartThread(uint32 workerThreadCount);
 	void RunIocpQueue();

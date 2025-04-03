@@ -64,9 +64,9 @@ int main()
 	
 
 	EventHandlerEx eventHandler;
-	std::shared_ptr<ClientNetworkService> server = std::make_shared<ClientNetworkService>("127.0.0.1", 7777, &eventHandler, 10);
+	std::shared_ptr<ClientNetworkService> server = std::make_shared<ClientNetworkService>("127.0.0.1", 7777, &eventHandler, 1000);
 	eventHandler.SetService(server);
-	server->Start(4);
+	server->Start();
 
 	while (true)
 	{

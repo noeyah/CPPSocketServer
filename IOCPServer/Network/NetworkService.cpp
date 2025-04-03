@@ -188,7 +188,6 @@ void NetworkService::Stop()
 			t.join();
 	}
 
-
 	_workerThreads.clear();
 	_sessions.clear();
 
