@@ -87,7 +87,6 @@ int main()
 	if (WSAStartup(NETWORK_WINSOCK_VERSION, &wsaData) != 0)
 	{
 		// 에러 처리
-		throw std::runtime_error("WSAStartup error");
 	}
 
 	// 2. 이벤트 핸들러 객체 생성
@@ -112,11 +111,11 @@ std::shared_ptr<IPublicService> client = NetworkFactory::CreateClientService(ip,
 ```
 📌 매개변수 설명
 - `std::string ip` : IP 주소
-- `uint32 Port` : Port 번호
+- `uint16 Port` : Port 번호
 - `INetworkEventHandler* eventHandler` : 위에서 정의한 이벤트 핸들러 객체 주소
-- `int32 pendingAcceptCount` : (서버 전용) 최대 동시 Accept 수
-- `int32 connectCount` : (클라이언트 전용) 연결 시도할 클라이언트(세션) 수
-- `workerThreadCount` : 스레드 개수 지정 가능 (0이면 자동 결정)
+- `uint32 pendingAcceptCount` : (서버 전용) 최대 동시 Accept 수
+- `uint32 connectCount` : (클라이언트 전용) 연결 시도할 클라이언트(세션) 수
+- `uint32 workerThreadCount` : 스레드 개수 지정 가능 (0이면 자동 결정)
 
 ```cpp
 // 4. 서비스 시작
