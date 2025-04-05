@@ -9,7 +9,7 @@ public:
 	Listener(std::weak_ptr<NetworkService> service);
 	~Listener();
 
-	bool Start(int32 pendingAcceptCount, int32 backlog = SOMAXCONN);
+	bool Start(uint32 pendingAcceptCount, int32 backlog = SOMAXCONN);
 	void Stop();
 	void IOEvent(AcceptEvent* iocpEvent, int32 bytesTransferred);
 

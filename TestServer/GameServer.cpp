@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "GameServer.h"
 #include "NetworkPch.h"
-#include "Network/ServerNetworkService.h"
+#include "Network/IPublicService.h"
 #include "PacketHelper.h"
 
-void GameServer::Start(std::string ip, uint16 port, int32 pendingAcceptCount)
+void GameServer::Start(std::string ip, uint16 port, uint32 pendingAcceptCount, uint32 workerThreadCount)
 {
 	if (_server)
 		return;
 
-	_server = std::make_shared<ServerNetworkService>(ip, port, this, pendingAcceptCount);
+	_server = NetworkFactory::CreateServerService(ip, port, this, pendingAcceptCount, workerThreadCount);
 
 	if (!_server->Start())
 	{
@@ -48,7 +48,7 @@ void GameServer::OnRecv(SessionID sessionID, std::span<const byte> packetData)
 	}
 
 	// 받은걸 그대로 전송
-	_server->Send(sessionID, packetData.data(), packetData.size());
+	_server->Send(sessionID, packetData);
 }
 
 void GameServer::OnSendComplete(SessionID sessionID, int32 len)

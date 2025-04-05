@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "NetworkService.h"
+#include "IPublicService.h"
 #include "IocpEvent.h"
 #include "Session/Listener.h"
 #include "Session/Connector.h"
 #include "Session/Session.h"
 #include "Session/SocketUtils.h"
 
-NetworkService::NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler) 
-	: _eventHandler(eventHandler)
+NetworkService::NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, uint32 workerThreadCount)
+	: _eventHandler(eventHandler), _workerThreadCount(workerThreadCount)
 {
 	_address.sin_family = AF_INET;
 
@@ -22,12 +23,6 @@ NetworkService::NetworkService(std::string ip, uint16 port, INetworkEventHandler
 	Init();
 }
 
-NetworkService::NetworkService(SOCKADDR_IN address, INetworkEventHandler* eventHandler) 
-	: _address(address), _eventHandler(eventHandler)
-{
-	Init();
-}
-
 NetworkService::~NetworkService()
 {
 }
@@ -39,6 +34,9 @@ bool NetworkService::RegisterIOCP(SOCKET socket)
 
 std::shared_ptr<Session> NetworkService::CreateAndStartSession(SOCKET socket)
 {
+	if (!_isRunning)
+		return nullptr;
+
 	SessionID newSessionID = GetNextSessionID();
 	auto session = std::make_shared<Session>(newSessionID, socket, weak_from_this());
 
@@ -57,20 +55,26 @@ void NetworkService::RemoveSession(SessionID sessionID)
 	_sessions.erase(sessionID);
 }
 
-void NetworkService::Send(SessionID sessionID, const byte* data, uint64 length)
+void NetworkService::Send(SessionID sessionID, std::span<const byte> data)
 {
+	if (!_isRunning)
+		return;
+
 	auto session = GetSession(sessionID);
 	if (session == nullptr)
 		return;
 
-	auto sendBuffer = std::make_shared<std::vector<byte>>(length);
-	memcpy(sendBuffer->data(), data, length);
+	auto sendBuffer = std::make_shared<std::vector<byte>>(data.size());
+	memcpy(sendBuffer->data(), data.data(), data.size());
 
 	session->Send(sendBuffer);
 }
 
 void NetworkService::Send(SessionID sessionID, std::shared_ptr<std::vector<byte>> sendBuffer)
 {
+	if (!_isRunning)
+		return;
+
 	auto session = GetSession(sessionID);
 	if (session == nullptr)
 		return;
@@ -78,19 +82,22 @@ void NetworkService::Send(SessionID sessionID, std::shared_ptr<std::vector<byte>
 	session->Send(sendBuffer);
 }
 
-void NetworkService::Broadcast(const byte* data, uint64 length)
+void NetworkService::Broadcast(std::span<const byte> data)
 {
-	if (data == nullptr || length == 0)
+	if (!_isRunning)
 		return;
 
-	auto sendBuffer = std::make_shared<std::vector<byte>>(length);
-	memcpy(sendBuffer->data(), data, length);
+	auto sendBuffer = std::make_shared<std::vector<byte>>(data.size());
+	memcpy(sendBuffer->data(), data.data(), data.size());
 
 	Broadcast(sendBuffer);
 }
 
 void NetworkService::Broadcast(std::shared_ptr<std::vector<byte>> sendBuffer)
 {
+	if (!_isRunning)
+		return;
+
 	if (sendBuffer == nullptr || sendBuffer->empty())
 		return;
 
@@ -154,12 +161,35 @@ void NetworkService::Init()
 	SocketUtils::CloseSocket(tempSocket);
 }
 
+bool NetworkService::Start()
+{
+	if (_isRunning.exchange(true))
+		return false;
+
+	if (!InitSockets())
+	{
+		CloseHandle(_iocpHandle);
+		_iocpHandle = nullptr;
+		_isRunning = false;
+		return false;
+	}
+
+	// worker thread
+	StartThread();
+
+	LOG_INFO("NetworkService Start");
+
+	return true;
+}
+
 void NetworkService::Stop()
 {
 	if (!_isRunning.exchange(false))
 		return;
 
 	LOG_INFO("Stopping NetworkService...");
+
+	CleanupSockets();
 
 	std::vector<std::shared_ptr<Session>> targetSession;
 	{
@@ -200,27 +230,24 @@ void NetworkService::Stop()
 	LOG_INFO("NetworkService Stop !");
 }
 
-void NetworkService::StartThread(uint32 workerThreadCount)
+void NetworkService::StartThread()
 {
-	_workerThreadCount = workerThreadCount;
-	if (workerThreadCount == 0)
+	if (_workerThreadCount == 0)
 	{
 		// 내가 알아서 함
 		auto hardwareThreadCount = std::thread::hardware_concurrency();
-		_workerThreadCount = hardwareThreadCount;
-		if (_workerThreadCount <= 0)
-			_workerThreadCount = 4;
+		_workerThreadCount = hardwareThreadCount > 0 ? hardwareThreadCount : 4;
 	}
 
 	// worker thread
 	_workerThreads.reserve(_workerThreadCount);
 	for (uint32 i = 0; i < _workerThreadCount; i++)
 	{
-		_workerThreads.emplace_back([this]() { this->RunIocpQueue(); });
+		_workerThreads.emplace_back([this]() { this->Dispatcher(); });
 	}
 }
 
-void NetworkService::RunIocpQueue()
+void NetworkService::Dispatcher()
 {
 	if (_iocpHandle == nullptr)
 	{

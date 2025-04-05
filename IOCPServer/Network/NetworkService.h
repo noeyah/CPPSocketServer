@@ -1,42 +1,35 @@
 #pragma once
+#include "IPublicService.h"
 
 class Session;
 
-class INetworkEventHandler
+class NetworkService : public IPublicService, public std::enable_shared_from_this<NetworkService>
 {
 public:
-	virtual ~INetworkEventHandler() = default;
-
-	virtual void OnConnect(SessionID sessionID) = 0;
-	virtual void OnDisconnect(SessionID sessionID) = 0;
-	virtual void OnRecv(SessionID sessionID, std::span<const byte> packetData) = 0;
-	virtual void OnSendComplete(SessionID sessionID, int32 len) {};
-};
-
-class NetworkService : public std::enable_shared_from_this<NetworkService>
-{
-public:
-	NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler);
-	NetworkService(SOCKADDR_IN address, INetworkEventHandler* eventHandler);
+	NetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, uint32 workerThreadCount);
 	virtual ~NetworkService();
 
-	virtual bool Start(uint32 workerThreadCount = 0) = 0;
-	virtual void Stop();
+	// IPublicService 함수 override
+	virtual bool Start() final;
+	virtual void Stop() final;
+	virtual void Send(SessionID sessionID, std::span<const byte> data) override;
+	virtual void Send(SessionID sessionID, std::shared_ptr<std::vector<byte>> sendBuffer) override;
+	virtual void Broadcast(std::span<const byte> data) override;
+	virtual void Broadcast(std::shared_ptr<std::vector<byte>> sendBuffer) override;
 
-	void RegisterEventHandler(INetworkEventHandler* eventHandler) { _eventHandler = eventHandler; }
+	// 하위 클래스에서 쓰는 소켓 초기화
+	virtual bool InitSockets() = 0;
+	virtual void CleanupSockets() = 0;
+
+	//
 	INetworkEventHandler* GetEventHandler() const { return _eventHandler; }
 	SOCKADDR_IN GetAddress() const { return _address; }
-	HANDLE GetHandle() const { return _iocpHandle; }
-
 	bool RegisterIOCP(SOCKET socket);
+	//HANDLE GetHandle() const { return _iocpHandle; }
 
 	// session 관련 함수
 	std::shared_ptr<Session> CreateAndStartSession(SOCKET socket);
 	void RemoveSession(SessionID sessionID);
-	void Send(SessionID sessionID, const byte* data, uint64 length);
-	void Send(SessionID sessionID, std::shared_ptr<std::vector<byte>> sendBuffer);
-	void Broadcast(const byte* data, uint64 length);
-	void Broadcast(std::shared_ptr<std::vector<byte>> sendBuffer);
 
 	// winsock 확장 함수들
 	LPFN_ACCEPTEX GetAcceptEx() const { return _acceptEx; }
@@ -48,8 +41,8 @@ protected:
 	void Init();
 
 	// worker thread
-	void StartThread(uint32 workerThreadCount);
-	void RunIocpQueue();
+	void StartThread();
+	void Dispatcher();
 
 	SessionID GetNextSessionID() { return ++_nextSessionID; }
 	std::shared_ptr<Session> GetSession(SessionID sessionID);

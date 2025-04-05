@@ -13,9 +13,9 @@ Connector::~Connector()
 {
 }
 
-void Connector::Connect(int32 connectCount)
+void Connector::Connect(uint32 connectCount)
 {
-	for (int32 i = 0; i < connectCount; i++)
+	for (uint32 i = 0; i < connectCount; i++)
 	{
 		PostConnect();
 	}

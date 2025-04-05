@@ -13,7 +13,7 @@ Listener::~Listener()
 {
 }
 
-bool Listener::Start(int32 pendingAcceptCount, int32 backlog)
+bool Listener::Start(uint32 pendingAcceptCount, int32 backlog)
 {
 	if (_service.expired())
 		return false;
@@ -56,7 +56,7 @@ bool Listener::Start(int32 pendingAcceptCount, int32 backlog)
 
 	_isListening.store(true);
 
-	for (int32 i = 0; i < pendingAcceptCount; i++)
+	for (uint32 i = 0; i < pendingAcceptCount; i++)
 	{
 		auto iocpEvent = std::make_unique<AcceptEvent>();
 		iocpEvent->ListenerPtr = shared_from_this();

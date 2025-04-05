@@ -6,14 +6,13 @@ class Connector;
 class ClientNetworkService : public NetworkService
 {
 public:
-	ClientNetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, int32 connectCount);
-	ClientNetworkService(SOCKADDR_IN address, INetworkEventHandler* eventHandler, int32 connectCount);
+	ClientNetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, uint32 connectCount, uint32 workderThreadCount);
 	virtual ~ClientNetworkService();
 
-	virtual bool Start(uint32 workerThreadCount = 0) override;
-	virtual void Stop() override;
+	virtual bool InitSockets() override;
+	virtual void CleanupSockets() override;
 
 private:
 	std::shared_ptr<Connector> _connector;
-	int32 _connectCount;
+	uint32 _connectCount;
 };

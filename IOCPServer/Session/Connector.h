@@ -9,7 +9,7 @@ public:
 	Connector(std::weak_ptr<NetworkService> service);
 	~Connector();
 
-	void Connect(int32 connectCount);
+	void Connect(uint32 connectCount);
 	void IOEvent(ConnectEvent* iocpEvent, int32 bytesTransferred);
 
 private:

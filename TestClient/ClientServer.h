@@ -1,10 +1,10 @@
 #pragma once
 #include "Network/IPublicService.h"
 
-class GameServer : public INetworkEventHandler
+class ClientServer : public INetworkEventHandler
 {
 public:
-	void Start(std::string ip, uint16 port, uint32 pendingAcceptCount, uint32 workerThreadCount = 0);
+	void Start(std::string ip, uint16 port, uint32 connectCount = 1, uint32 workerThreadCount = 0);
 	void Stop();
 
 	virtual void OnConnect(SessionID sessionID) override;

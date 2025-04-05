@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Network\IPublicService.h" />
     <ClInclude Include="Network\ClientNetworkService.h" />
     <ClInclude Include="Session\Connector.h" />
     <ClInclude Include="NetworkDefine.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Session\SocketUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Network\IPublicService.cpp" />
     <ClCompile Include="Network\ClientNetworkService.cpp" />
     <ClCompile Include="Session\Connector.cpp" />
     <ClCompile Include="Session\Listener.cpp" />

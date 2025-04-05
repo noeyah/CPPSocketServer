@@ -48,6 +48,7 @@
     <ClInclude Include="Session\RecvBuffer.h">
       <Filter>Session</Filter>
     </ClInclude>
+    <ClInclude Include="Network\IPublicService.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network\NetworkService.cpp">
@@ -83,5 +84,6 @@
     <ClCompile Include="Session\RecvBuffer.cpp">
       <Filter>Session</Filter>
     </ClCompile>
+    <ClCompile Include="Network\IPublicService.cpp" />
   </ItemGroup>
 </Project>
