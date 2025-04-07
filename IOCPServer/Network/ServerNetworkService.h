@@ -9,6 +9,7 @@ public:
 	ServerNetworkService(std::string ip, uint16 port, INetworkEventHandler* eventHandler, uint32 pendingAcceptCount, uint32 workerThreadCount);
 	virtual ~ServerNetworkService();
 
+protected:
 	virtual bool InitSockets() override;
 	virtual void CleanupSockets() override;
 

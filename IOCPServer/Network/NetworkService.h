@@ -17,10 +17,6 @@ public:
 	virtual void Broadcast(std::span<const byte> data) override;
 	virtual void Broadcast(std::shared_ptr<std::vector<byte>> sendBuffer) override;
 
-	// 하위 클래스에서 쓰는 소켓 초기화
-	virtual bool InitSockets() = 0;
-	virtual void CleanupSockets() = 0;
-
 	//
 	INetworkEventHandler* GetEventHandler() const { return _eventHandler; }
 	SOCKADDR_IN GetAddress() const { return _address; }
@@ -38,6 +34,11 @@ public:
 	LPFN_DISCONNECTEX GetDisConnectEx() const { return _disconnectEx; }
 
 protected:
+	// 하위 클래스 소켓 초기화
+	virtual bool InitSockets() = 0;
+	virtual void CleanupSockets() = 0;
+
+private:
 	void Init();
 
 	// worker thread
@@ -48,6 +49,8 @@ protected:
 	std::shared_ptr<Session> GetSession(SessionID sessionID);
 
 protected:
+	// 
+private:
 	// iocp 핸들
 	HANDLE _iocpHandle = nullptr;
 
